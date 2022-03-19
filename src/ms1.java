@@ -8,18 +8,6 @@ class tmpNode {
     }
 }
 
-class TreeNode {
-    int val;
-    MNode left;
-    MNode right;
-    TreeNode() {}
-    TreeNode(int val) { this.val = val; }
-    TreeNode(int val, MNode left, MNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
 
 public class ms1 {
 
