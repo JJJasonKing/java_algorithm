@@ -2,11 +2,11 @@ import java.util.Scanner;
 
 class Node {
     int val;
-    MNode left;
-    MNode right;
+    Node left;
+    Node right;
     Node() {}
     Node(int val) { this.val = val; }
-    Node(int val, MNode left, MNode right) {
+    Node(int val, Node left, Node right) {
         this.val = val;
         this.left = left;
         this.right = right;
@@ -15,9 +15,9 @@ class Node {
 
 public class hulu {
     private static int res = 0;
-    public static MNode build(int[] arr, int i, int m) {
+    public static Node build(int[] arr, int i, int m) {
         if (i < m) {
-            MNode cur = new MNode(arr[i]);
+            Node cur = new Node(arr[i]);
             int l = 2 * i + 1, r = l + 1;
             if (l < m && arr[l] != -1) {
                 cur.left = build(arr, l, m);
@@ -29,7 +29,7 @@ public class hulu {
         }
         return null;
     }
-    public static void dfs(MNode root) {
+    public static void dfs(Node root) {
         if (root.left == null && root.right == null) {
             res++;
             return;
@@ -52,7 +52,7 @@ public class hulu {
         for (int i = 0; i < m; i++) {
             arr[i] = sc.nextInt();
         }
-        MNode root = build(arr, 0, m);
+        Node root = build(arr, 0, m);
         dfs(root);
         System.out.println(res);
     }
