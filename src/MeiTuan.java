@@ -1,9 +1,10 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class MeiTuan {
 
-    public static void main(String[] args) {
+    public static void main5(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int k = sc.nextInt();
@@ -47,45 +48,39 @@ public class MeiTuan {
 
 
 
-    public static void main3(String[] args) {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m1 = sc.nextInt();
         int m2 = sc.nextInt();
-        int[] arr11 = new int[m1];
-        int[] arr12 = new int[m1];
-        int[] arr21 = new int[m2];
-        int[] arr22 = new int[m2];
+        int[][] arr = new int[m1+m2][2];
         for (int i = 0; i < m1; i++) {
-            arr11[i] = sc.nextInt();
+            arr[i][0] = sc.nextInt();
         }
         for (int i = 0; i < m1; i++) {
-            arr12[i] = sc.nextInt();
+            arr[i][1] = sc.nextInt();
         }
-        for (int i = 0; i < m2; i++) {
-            arr21[i] = sc.nextInt();
+        for (int i = m1; i < m1 + m2; i++) {
+            arr[i][0] = sc.nextInt();
         }
-        for (int i = 0; i < m2; i++) {
-            arr22[i] = sc.nextInt();
+        for (int i = m1; i < m1 + m2; i++) {
+            arr[i][1] = sc.nextInt();
         }
-
-        boolean[] vis = new boolean[n + 1];
-        for (int i = 0; i < m1; i++) {
-            for (int l = arr11[i]; l <= arr12[i]; l++) {
-                vis[l] = true;
-            }
-        }
+        Arrays.sort(arr, (int[] a, int[] b) -> {
+            return a[0] - b[0];
+        });
+        int last = arr[0][1];
         int res = 0;
-        for (int i = 0; i < m2; i++) {
-            for (int l = arr21[i]; l <= arr22[i]; l++) {
-                if (vis[l]) {
-                    res++;
-                }
+        for (int i = 1; i < m1 + m2; i++) {
+            if (arr[i][0] > last) {
+                last = arr[i][1];
+                continue;
             }
+            res += Math.min(last, arr[i][1]) - arr[i][0] + 1;
+            last = Math.max(last, arr[i][1]);
         }
         System.out.println(res);
     }
-
 
 
 
@@ -152,8 +147,6 @@ public class MeiTuan {
         return res.toString();*/
 
     }
-
-
 
 
 
@@ -228,19 +221,3 @@ public class MeiTuan {
     }
 
 }
-
-
-
-class MNode {
-    int val;
-    MNode left;
-    MNode right;
-    MNode() {}
-    MNode(int val) { this.val = val; }
-    MNode(int val, MNode left, MNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
