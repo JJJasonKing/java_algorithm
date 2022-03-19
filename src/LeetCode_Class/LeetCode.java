@@ -1,3 +1,5 @@
+package LeetCode_Class;
+
 import java.util.*;
 
 public class LeetCode {

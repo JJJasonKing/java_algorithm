@@ -10,11 +10,11 @@ class tmpNode {
 
 class TreeNode {
     int val;
-    Node left;
-    Node right;
+    MNode left;
+    MNode right;
     TreeNode() {}
     TreeNode(int val) { this.val = val; }
-    TreeNode(int val, Node left, Node right) {
+    TreeNode(int val, MNode left, MNode right) {
         this.val = val;
         this.left = left;
         this.right = right;
