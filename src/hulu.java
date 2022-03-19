@@ -1,14 +1,12 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Scanner;
 
 class Node {
     int val;
-    Node left;
-    Node right;
+    MNode left;
+    MNode right;
     Node() {}
     Node(int val) { this.val = val; }
-    Node(int val, Node left, Node right) {
+    Node(int val, MNode left, MNode right) {
         this.val = val;
         this.left = left;
         this.right = right;
@@ -17,9 +15,9 @@ class Node {
 
 public class hulu {
     private static int res = 0;
-    public static Node build(int[] arr, int i, int m) {
+    public static MNode build(int[] arr, int i, int m) {
         if (i < m) {
-            Node cur = new Node(arr[i]);
+            MNode cur = new MNode(arr[i]);
             int l = 2 * i + 1, r = l + 1;
             if (l < m && arr[l] != -1) {
                 cur.left = build(arr, l, m);
@@ -31,7 +29,7 @@ public class hulu {
         }
         return null;
     }
-    public static void dfs(Node root) {
+    public static void dfs(MNode root) {
         if (root.left == null && root.right == null) {
             res++;
             return;
@@ -54,7 +52,7 @@ public class hulu {
         for (int i = 0; i < m; i++) {
             arr[i] = sc.nextInt();
         }
-        Node root = build(arr, 0, m);
+        MNode root = build(arr, 0, m);
         dfs(root);
         System.out.println(res);
     }
