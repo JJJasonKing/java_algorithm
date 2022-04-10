@@ -214,4 +214,174 @@ class solution_1 {
         }
         return res;
     }
+
+
+    // 1071. 字符串的最大公因子  like 796. 旋转字符串
+    public int gcd(int a, int b) {
+        if (b == 0) {
+            return a;
+        }
+        return gcd(b, a % b);
+    }
+
+    public String gcdOfStrings(String str1, String str2) {
+        if (!(str1 + str2).equals(str2 + str1)) {
+            return "";
+        }
+        return str1.substring(0, gcd(str1.length(), str2.length()));
+    }
+
+    // 面试题 08.14. 布尔运算
+    // 区间dp
+    public int countEval(String s, int result) {
+        int n = s.length();
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return Integer.parseInt(s) == result ? 1 : 0;
+        }
+        char[] chs = s.toCharArray();
+        // dp数组[i][j][0/1]是0或1的count
+        int[][][] dp = new int[n][n][2];
+        for (int i = 0; i < n; i += 2) {
+            dp[i][i][chs[i]-'0'] = 1;
+        }
+        // [i][j] 从i到j 注意遍历顺序
+        for (int j = 2; j < n; j += 2) {
+            for (int i = j - 2; i >= 0; i -= 2) {
+                for (int k = i + 1; k < j; k++) {
+                    if (chs[k] == '&') {
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][1] * dp[k + 1][j][0];
+                        dp[i][j][1] += dp[i][k - 1][1] * dp[k + 1][j][1];
+                    } else if (chs[k] == '|') {
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0];
+                        dp[i][j][1] += dp[i][k - 1][0] * dp[k + 1][j][1] + dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][1] * dp[k + 1][j][1];
+                    } else {
+                        dp[i][j][0] += dp[i][k - 1][0] * dp[k + 1][j][0] + dp[i][k - 1][1] * dp[k + 1][j][1];
+                        dp[i][j][1] += dp[i][k - 1][1] * dp[k + 1][j][0] + dp[i][k - 1][0] * dp[k + 1][j][1];
+                    }
+                }
+            }
+        }
+        return dp[0][n-1][result];
+    }
+
+
+
+
+
+    static class LinkNode {
+        LinkNode next;
+        int val;
+        public LinkNode(int v) {
+            val = v;
+        }
+    }
+
+
+    public static void mainn(String[] args) {
+        LinkNode head = new LinkNode(0);
+        int[] tmp = new int[]{1,2,3,4,5};
+        LinkNode cur = head;
+        for (int i = 0; i < tmp.length; i++) {
+            cur.next = new LinkNode(tmp[i]);
+            cur = cur.next;
+        }
+        cur.next = head.next.next;
+        System.out.println(getLen(head));
+    }
+
+    public static int getLen(LinkNode head) {
+        LinkNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                slow = head;
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                break;
+            }
+        }
+        // 无环
+        if (fast == null || fast.next == null) {
+            return 0;
+        }
+        int len = 1;
+        fast = fast.next;
+        while (slow != fast) {
+            fast = fast.next;
+            len++;
+        }
+        return len;
+    }
+
+    public static void mainali1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        Set<String> set = new HashSet<>();
+        while (n-- > 0) {
+            String cur = sc.nextLine();
+            if (cur.length() < 6 || cur.length() > 12) {
+                System.out.println("illegal length");
+            } else if (!check(cur)) {
+                System.out.println("illegal charactor");
+            } else if (set.contains(cur)) {
+                System.out.println("acount existed");
+            } else {
+                System.out.println("registration complete");
+                set.add(cur);
+            }
+        }
+    }
+
+    public static boolean check(String s) {
+        for (char c : s.toCharArray()) {
+            if (!(Character.isUpperCase(c) || Character.isLowerCase(c))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        while (n-- > 0) {
+            int res = 0;
+            int[] arr = new int[5];
+            for (int i = 0; i < 5; i++) {
+                arr[i] = sc.nextInt();
+            }
+            Arrays.sort(arr);
+            int t = arr[1];
+            res += t;
+            arr[1] = 0;
+            for (int i = 2; i < 5; i++) {
+                arr[i] -= t;
+            }
+            Arrays.sort(arr);
+            res += arr[1];
+            System.out.println(res);
+        }
+    }
+
+    public static void main3(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[][] arr = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            int j = 0;
+            for (; j < 3; j++) {
+                arr[i][i] = sc.nextInt();
+            }
+        }
+        System.out.println(n - 2);
+    }
+
+
 }

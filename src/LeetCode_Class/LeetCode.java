@@ -469,11 +469,66 @@ public class LeetCode {
         }
         return res;
     }
+    class node {
+        node left;
+        node right;
+        node next;
+    };
 
 
+    public void insert(node root, node parent, boolean isLeft, node child) {
+        Queue<node> queue = new LinkedList<>();
+        List<node> list = new ArrayList<>();
+        queue.offer(root);
+        boolean f = false;
+        while (!queue.isEmpty()) {
+            int n = queue.size();
+            for (int i = 0; i < n; i++) {
+                node cur = queue.poll();
+                if (cur == parent) {
+                    if (isLeft) {
+                        parent.left = child;
+                    } else {
+                        parent.right = child;
+                    }
+                    // 设置一个pre节点，if cur == child  if pre == child
+                    f = true;
+                } else {
+                    if (cur.left != null) queue.offer(cur.left);
+                    if (cur.right != null) queue.offer(cur.right);
+                }
+                if (f) {
+                    list.add(cur);
+                }
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
 
+        }
+    }
 
-
+    // 大数乘法
+    public static void product(String a, String b) {
+        char[] chs1 = a.toCharArray();
+        char[] chs2 = b.toCharArray();
+        int n1 = chs1.length, n2 = chs2.length;
+        int[] res = new int[n1 + n2];
+        for (int i = n1 - 1; i >= 0; i--) {
+            for (int j = n2 - 1; j >= 0; j--) {
+                res[i + j + 1] += (chs1[i] - '0') * (chs2[j] - '0');
+            }
+        }
+        for (int i = n1 + n2 - 1; i > 0; i--) {
+            if (res[i] >= 10) {
+                res[i-1] += res[i] / 10;
+                res[i] %= 10;
+            }
+        }
+        for (int c : res) {
+            System.out.print(c);
+        }
+        System.out.println();
+    }
 
 
 
@@ -486,7 +541,9 @@ public class LeetCode {
     public static void main(String[] args) {
         int[][] matrix2 = {{2,1,1},{2,3,1},{3,4,1}};
         LeetCode leetCode = new LeetCode();
-        leetCode.networkDelayTime(matrix2, 4, 2);
+        // leetCode.networkDelayTime(matrix2, 4, 2);
+        String a = "99", b = "12345";
+        product(a, b);
     }
 
 }
