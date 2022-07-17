@@ -532,19 +532,203 @@ public class LeetCode {
 
 
 
+    public static void mainx(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int [][] arr = new int[n][5];
+        for (int i = 0; i < n; i++) {
+            arr[i][0] = sc.nextInt();
+            arr[i][1] = sc.nextInt(); // cpu
+            arr[i][2] = sc.nextInt(); // mem
+            arr[i][3] = sc.nextInt(); // arch
+            arr[i][4] = sc.nextInt(); // np
+        }
+        int cnt = sc.nextInt(), stra = sc.nextInt(), cpu = sc.nextInt(), mem = sc.nextInt(), cpua = sc.nextInt(), sup = sc.nextInt();
+        if (stra == 1) { // cpu
+            Arrays.sort(arr, (int[] a, int[] b) -> a[1] == b[1] ? a[2] - b[2] : a[1] - b[1]);
+        } else {
+            Arrays.sort(arr, (int[] a, int[] b) -> a[2] == b[2] ? a[1] - b[1] : a[2] - b[2]);
+        }
+        int sum = 0;
+        for (int [] cur: arr) {
+            if (cur[1] < cpu || cur[2] < mem || (cpua != 9 && cur[3] != cpua) || (sup != 2 && cur[4] != sup)) {
+                continue;
+            }
+            sum++;
+        }
+        sum = Math.min(sum, cnt);
+        System.out.print(sum + " ");
+        for (int [] cur: arr) {
+            if (cur[1] < cpu || cur[2] < mem || (cpua != 9 && cur[3] != cpua) || (sup != 2 && cur[4] != sup)) {
+                continue;
+            }
+            if (sum > 0) {
+                if (sum > 1)
+                    System.out.print(cur[0] + " ");
+                else
+                    System.out.print(cur[0]);
+                sum--;
+            }
+        }
+    }
+
+
+    public static void maintt(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int [][] arr = new int[n][2];
+        int time = 0;
+        for (int i = 0; i < n; i++) {
+            arr[i][0] = sc.nextInt();
+            arr[i][1] = sc.nextInt();
+            time = Math.max(time, arr[i][1]);
+        }
+        Arrays.sort(arr, (int[] a, int[] b) -> a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+        int res = 0;
+        int idx = 0;
+        for (int[] cur : arr) {
+            if (cur[0] > idx) {
+                res += cur[1];
+                idx++;
+            }
+        }
+        System.out.println(res);
+    }
+
+
+    public static void maint(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+            sum += arr[i];
+        }
+        if (sum % 2 != 0 || n == 1) {
+            System.out.println(-1);
+            return;
+        }
+        int target = sum / 2;
+        int[] dp = new int[target + 1];
+        // 记忆化
+        int[] memp = new int[target + 1];
+        Arrays.fill(memp, -1);
+        for (int i = 0; i < n; i++) {
+            for (int j = target; j >= arr[i]; j--) {
+                if (dp[j] < dp[j - arr[i]] + arr[i]) {
+                    dp[j] = dp[j - arr[i]] + arr[i];
+                    memp[j] = i;
+                }
+            }
+        }
+
+        if (dp[target] != target) {
+            System.out.println(-1);
+        } else {
+            PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);
+            Set<Integer> set = new HashSet<>();
+            System.out.println(target);
+            int t = target;
+            while (memp[t] != -1) {
+                // System.out.print(arr[memp[t]] + " ");
+                pq.offer(arr[memp[t]]);
+                set.add(memp[t]);
+                t = t - arr[memp[t]];
+            }
+            while (!pq.isEmpty()) {
+                if (pq.size() > 1)
+                    System.out.print(pq.poll() + " ");
+                else
+                    System.out.print(pq.poll());
+            }
+            System.out.println();
+            for (int i = 0; i < n; i++) {
+                if (!set.contains(i)) {
+                    // System.out.print(arr[i] + " ");
+                    pq.offer(arr[i]);
+                }
+            }
+            while (!pq.isEmpty()) {
+                if (pq.size() > 1)
+                    System.out.print(pq.poll() + " ");
+                else
+                    System.out.print(pq.poll());
+            }
+        }
+
+    }
+
+    // 699. 掉落的方块
+    public List<Integer> fallingSquares(int[][] positions) {
+        int n = positions.length;
+        // 此时的res为以j为结尾的最高高度
+        List<Integer> res = new ArrayList<>();
+        for (int j = 0; j < n; j++) {
+            int left1 = positions[j][0], right1 = left1 + positions[j][1] - 1;
+            int hj = positions[j][1];
+            for (int i = 0; i < j; i++) {
+                int left2 = positions[i][0], right2 = left2 + positions[i][1] - 1;
+                // 保证i在j的左边且重叠
+                if (right1 >= left2 && left1 <= right2) {
+                    hj = Math.max(hj, res.get(i) + positions[j][1]);
+                }
+            }
+            res.add(hj);
+        }
+        // 转化为全局
+        for (int i = 1; i < n; i++) {
+            res.set(i, Math.max(res.get(i-1), res.get(i)));
+        }
+        Random random =  new Random();
+        return res;
+    }
+
+    // 外星语
+    int[] map = new int[26];
+    public boolean isAlienSorted(String[] words, String order) {
+
+        for(int i = 0; i < 26; i++){
+            map[order.charAt(i) - 'a'] = i;
+        }
+        int n = words.length;
+        for (int i = 1; i < n; i++) {
+            if (!compareString(words[i - 1], words[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean compareString(String s1, String s2) {
+        int n1 = s1.length();
+        int n2 = s2.length();
+        int min = Math.min(n1, n2);
+        for (int i = 0; i < min; i++) {
+            int t1 = map[s1.charAt(i) - 'a'], t2 = map[s2.charAt(i) - 'a'];
+            if (t1 != t2) {
+                return t1 < t2;
+            }
+        }
+        return n1 <= n2;
+    }
 
 
 
 
 
 
-    public static void main(String[] args) {
+
+
+    public static void main222(String[] args) {
         int[][] matrix2 = {{2,1,1},{2,3,1},{3,4,1}};
         LeetCode leetCode = new LeetCode();
         // leetCode.networkDelayTime(matrix2, 4, 2);
         String a = "99", b = "12345";
         product(a, b);
     }
+
+
+
 
 }
 
@@ -593,12 +777,238 @@ class StockPrice {
 
 }
 
-class UndirectedGraphNode {
-    int label;
-    List<UndirectedGraphNode> neighbors;
-    UndirectedGraphNode(int x) {
-        label = x;
-        neighbors = new ArrayList<UndirectedGraphNode>();
+
+class LRUCache {
+    class DLinkedNode {
+        int key;
+        int value;
+        DLinkedNode prev;
+        DLinkedNode next;
+        public DLinkedNode() {}
+        public DLinkedNode(int _key, int _value) {key = _key; value = _value;}
+    }
+
+    int cap;
+    HashMap<Integer, DLinkedNode> map = new HashMap<>();;
+    // dummy node
+    DLinkedNode head = new DLinkedNode();
+    DLinkedNode tail = new DLinkedNode();
+    public LRUCache(int capacity) {
+        cap = capacity;
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        DLinkedNode cur = map.get(key);
+        int res = cur.value;
+        remove(cur);
+        insert(cur);
+        return res;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            DLinkedNode cur = map.get(key);
+            cur.value = value;
+            remove(cur);
+            insert(cur);
+        } else {
+            if (map.size() >= cap) {
+                // 先删map 再删链表
+                map.remove(tail.prev.key);
+                remove(tail.prev);
+            }
+            DLinkedNode cur = new DLinkedNode(key, value);
+            map.put(key, cur);
+            insert(cur);
+        }
+    }
+    // 删除链表中的cur节点
+    private void remove(DLinkedNode cur) {
+        cur.prev.next = cur.next;
+        cur.next.prev = cur.prev;
+    }
+    // cur插入链表头
+    private void insert(DLinkedNode cur) {
+        cur.next = head.next;
+        cur.prev = head;
+        head.next.prev = cur;
+        head.next = cur;
     }
 }
 
+
+class AnimalShelf {
+    Deque<int[]> dogs = new LinkedList<>();
+    Deque<int[]> cats = new LinkedList<>();
+    public AnimalShelf() {
+
+    }
+
+    public void enqueue(int[] animal) {
+        if (animal[1] == 0) {
+            cats.offer(animal);
+        } else {
+            dogs.offer(animal);
+        }
+    }
+
+    public int[] dequeueAny() {
+        if (dogs.isEmpty() && cats.isEmpty()) {
+            return new int[]{-1, -1};
+        }
+        if (dogs.isEmpty()) {
+            return cats.pollFirst();
+        }
+        if (cats.isEmpty()) {
+            return dogs.pollFirst();
+        }
+        if (cats.peekFirst()[0] < dogs.peekFirst()[0]) {
+            return cats.pollFirst();
+        } else {
+            return dogs.pollFirst();
+        }
+    }
+
+    public int[] dequeueDog() {
+        if (dogs.isEmpty()) {
+            return new int[]{-1, -1};
+        }
+        return dogs.pollFirst();
+    }
+
+    public int[] dequeueCat() {
+        if (cats.isEmpty()) {
+            return new int[]{-1, -1};
+        }
+        return cats.pollFirst();
+    }
+}
+
+class Codec {
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) { val = x;}
+    }
+    // 先序遍历
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        dfs_serialize(root, sb);
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public void dfs_serialize(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            sb.append("#,");
+            return;
+        }
+        sb.append(root.val).append(",");
+        dfs_serialize(root.left, sb);
+        dfs_serialize(root.right, sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        System.out.println(data);
+        return deserialize(data.split(","));
+    }
+    // 不用idx的话就得用 LinkedList，或者cpp传引用
+    int idx;
+    public TreeNode deserialize(String[] dataArray) {
+        if (dataArray[idx].equals("#")) {
+            return null;
+        }
+        TreeNode cur = new TreeNode(Integer.parseInt(dataArray[idx]));
+        idx++;
+        cur.left = deserialize(dataArray);
+        idx++;
+        cur.right = deserialize(dataArray);
+        return cur;
+    }
+}
+
+class Solution695 {
+    int[][] dirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    public int maxAreaOfIsland(int[][] grid) {
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    res = Math.max(res, dfs(grid, i ,j));
+                }
+            }
+        }
+        return res;
+    }
+
+    public int dfs(int[][] grid, int x, int y) {
+        if(x < 0 || y < 0 || x >= grid.length || y >= grid[0].length || grid[x][y] == 0) return 0;
+        int area = 1;
+        grid[x][y] = 0;
+        for (int[] d : dirs) {
+            area += dfs(grid, x + d[0], y + d[1]);
+        }
+        return area;
+    }
+}
+
+class Solution785 {
+    // 1. 二分图染色 dfs
+    public boolean isBipartite1(int[][] graph) {
+        int n = graph.length;
+        int[] colors = new int[n];
+        Arrays.fill(colors, -1);
+        for (int i = 0; i < n; i++) {
+            if (colors[i] == -1) {
+                colors[i] = 0;
+                if (!dfs(graph, i, colors)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int[][] graph, int cur, int[] colors) {
+        for (int nxt : graph[cur]) {
+            if (colors[nxt] < 0) {
+                colors[nxt] = 1 - colors[cur];
+                if (!dfs(graph, nxt, colors)) {
+                    return false;
+                }
+            } else if (colors[nxt] == colors[cur]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 2. bfs
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] colors = new int[n];
+        Arrays.fill(colors, -1);
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (colors[i] < 0) queue.offer(i);
+            while (!queue.isEmpty()) {
+                int cur = queue.poll();
+                for (int nxt : graph[cur]) {
+                    if (colors[nxt] < 0) {
+                        colors[nxt] = 1 - colors[cur];
+                        queue.offer(nxt);
+                    } else if (colors[nxt] == colors[cur]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}

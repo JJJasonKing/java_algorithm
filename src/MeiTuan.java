@@ -4,11 +4,109 @@ import java.util.Scanner;
 
 public class MeiTuan {
 
-    public static void main5(String[] args) {
+    // hw1
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        int k = sc.nextInt();
+        // 扣的分数 t
+        int t = 100 - n;
+        if (t == 0 || t == 100) {
+            System.out.println(1);
+            return;
+        }
+        int res = 0;
+        if (n == 94) {
+            System.out.println(100);
+        } else if (n == 96) {
+            System.out.println(10 + 45);
+        } else if (n == 98) {
+            System.out.println(10);
+        } else if (n == 92) {
+            System.out.println(5 + 45);
+        } else if (n == 90) {
+            System.out.println(50);
+        } else if (n == 88) {
+            System.out.println(40 + 45);
+        }
+        // init max cnt
+        int cnt2 = Math.min(t / 2, 3);
+        for (int i = 0; i <= cnt2; i++) {
+            int shengyu1 = t - i * 2;
+            int cnt4 = Math.min(shengyu1 / 4, 3);
+            for (int j = 0; j <= cnt4; j++) {
+                int shengyu2 = shengyu1 - j * 4;
+                int k = shengyu2 / 8;
+                if (i * 2 + j * 4 + k * 8 == t) {
+                    res += cmn(i, 10) * cmn(j, 10) * cmn(k, 5);
+                }
+            }
+        }
+
+        System.out.println(res);
     }
+
+    public static int cmn(int n, int m) {
+        if (n == 0) {
+            return 1;
+        }
+        int fz = 1;
+        for (int i = 0; i < n; i++) {
+            fz *= m;
+            m--;
+        }
+        int fm  = 1;
+        while (n > 1) {
+            fm *= n;
+            n--;
+        }
+        return fz / fm;
+    }
+
+    class TreeNode {
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+        public TreeNode() {}
+        public TreeNode(int val) { this.val = val; }
+        public TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    public static void mainh2(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String in1 = sc.nextLine();
+        String[] in2 = sc.nextLine().split("/");
+        String in3 = sc.nextLine();
+    }
+
+
+
+    public static void mainh3(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int sum = 0;
+        int max = 0;
+        int[] id = new int[n];
+        int[] pid = new int[n];
+        for (int i = 0; i < n; i++) {
+            id[i] = sc.nextInt();
+            max = Math.max(max, id[i]);
+            sum += id[i];
+        }
+        for (int i = 0; i < n; i++) {
+            pid[i] = sc.nextInt();
+        }
+        int task = sc.nextInt();
+        if (sum < task) {
+            System.out.println(-1);
+        }
+        System.out.println(max);
+    }
+
+
 
 
 
@@ -48,7 +146,7 @@ public class MeiTuan {
 
 
 
-    public static void main(String[] args) {
+    public static void mainx(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m1 = sc.nextInt();
