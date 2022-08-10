@@ -1,2 +1,3 @@
-# JavaPractice_1
-java题目练习
+# JavaPractice
+`java` 练手代码
+
