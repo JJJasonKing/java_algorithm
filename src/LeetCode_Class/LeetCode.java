@@ -713,21 +713,85 @@ public class LeetCode {
     }
 
 
-
-
-
-
-
-
-    public static void main222(String[] args) {
-        int[][] matrix2 = {{2,1,1},{2,3,1},{3,4,1}};
-        LeetCode leetCode = new LeetCode();
-        // leetCode.networkDelayTime(matrix2, 4, 2);
-        String a = "99", b = "12345";
-        product(a, b);
+    // 1091. 二进制矩阵中的最短路径，bfs板子
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return -1;
+        }
+        if (grid[0][0] == 1) {
+            return -1;
+        }
+        // 定义 8个方向
+        int[][] dirs = {{1, -1}, {1, 0}, {1, 1}, {0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {-1, 1}};
+        int n = grid.length;
+        int step = 1;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{0, 0});
+        grid[0][0] = 1;
+        while (!queue.isEmpty()) {
+            int len = queue.size();
+            while (len-- > 0) {
+                int[] cur = queue.poll();
+                int x = cur[0], y = cur[1];
+                if (x == n - 1 && y == n - 1) {
+                    return step;
+                }
+                for (int[] d : dirs) {
+                    int nx = x + d[0], ny = y + d[1];
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= n || grid[nx][ny] != 0) {
+                        continue;
+                    }
+                    queue.offer(new int[]{nx, ny});
+                    grid[nx][ny] = 1;
+                }
+            }
+            step++;
+        }
+        return -1;
     }
 
 
+    // 1162. 地图分析
+    // 1. 对每个0深搜附近的1 找到1就返回 维护个最近的最大值 剪枝
+    // 2. 对陆地入队进行广搜，搜到最远的0 使用bfs
+    public int maxDistance(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return -1;
+        }
+        int n = grid.length;
+        int[][] dirs = {{1, 0}, {0, -1}, {0, 1}, {-1, 0}};
+        Queue<int[]> queue = new LinkedList<>();
+        // 陆地入队
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    queue.offer(new int[]{i, j});
+                }
+            }
+        }
+        boolean find = false;
+        int[] cur = null;
+        while (!queue.isEmpty()) {
+            int len = queue.size();
+            while (len-- > 0) {
+                cur = queue.poll();
+                for (int[] d : dirs) {
+                    int nx = cur[0] + d[0], ny = cur[1] + d[1];
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= n || grid[nx][ny] != 0) {
+                        continue;
+                    }
+                    find = true;
+                    queue.offer(new int[]{nx, ny});
+                    grid[nx][ny] = grid[cur[0]][cur[1]] + 1;
+                }
+
+            }
+        }
+        if (cur == null || !find) {
+            return -1;
+        }
+        return grid[cur[0]][cur[1]] - 1;
+    }
 
 
 }
